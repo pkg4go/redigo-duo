@@ -18,7 +18,7 @@ func init() {
 	redis = Duo(con)
 }
 
-func TestSetGet(t *testing.T) {
+func TestSetGetDel(t *testing.T) {
 	a := A{t}
 
 	k := uuid.New().String()
@@ -36,9 +36,16 @@ func TestSetGet(t *testing.T) {
 	v, e = redis.Get(k)
 	a.Nil(e)
 	a.Equal(c.String(v), "2")
+	// del
+	e = redis.Del(k)
+	a.Nil(e)
+
+	v, e = redis.Get(k)
+	a.Nil(e)
+	a.Equal(len(v), 0)
 }
 
-func TestExpire(t *testing.T) {
+func TestExpireExists(t *testing.T) {
 	a := A{t}
 
 	k := uuid.New().String()
@@ -51,7 +58,15 @@ func TestExpire(t *testing.T) {
 	a.Nil(e)
 	a.Equal(c.String(v), "2")
 
+	exists, e := redis.Exists(k)
+	a.Nil(e)
+	a.Equal(exists, true)
+
 	time.Sleep(1 * time.Second)
+
+	exists, e = redis.Exists(k)
+	a.Nil(e)
+	a.Equal(exists, false)
 
 	v, e = redis.Get(k)
 	a.Nil(e)

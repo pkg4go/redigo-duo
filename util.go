@@ -1,5 +1,6 @@
 package duo
 
+import "strconv"
 import "errors"
 
 func toByteArray(i interface{}) ([]byte, error) {
@@ -14,5 +15,36 @@ func toByteArray(i interface{}) ([]byte, error) {
 		return i.([]uint8)[:], nil
 	default:
 		return nil, errors.New("invalid type")
+	}
+}
+
+func toString(i interface{}) (string, error) {
+	if i == nil {
+		return "", nil
+	}
+
+	switch i.(type) {
+	case int64:
+		v, _ := i.(int64)
+		return strconv.FormatInt(v, 10), nil
+	case string:
+		return i.(string), nil
+	case []uint8:
+		return string(i.([]uint8)[:]), nil
+	default:
+		return "", errors.New("invalid type")
+	}
+}
+
+func toInt64(i interface{}) (int64, error) {
+	if i == nil {
+		return 0, nil
+	}
+
+	switch i.(type) {
+	case int64:
+		return i.(int64), nil
+	default:
+		return 0, errors.New("invalid type")
 	}
 }

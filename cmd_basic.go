@@ -1,15 +1,8 @@
 package duo
 
-import r "github.com/garyburd/redigo/redis"
-
-type Conn interface {
-	Set(k, v interface{}) error
-	Get(k interface{}) ([]byte, error)
-	Expire(k, expiration interface{}) error
-}
-
-type conn struct {
-	connection r.Conn
+func (c conn) Del(k interface{}) error {
+	_, err := c.connection.Do("DEL", k)
+	return err
 }
 
 func (c conn) Set(k, v interface{}) error {
@@ -31,6 +24,16 @@ func (c conn) Expire(k, expiration interface{}) error {
 	return err
 }
 
-func Duo(c r.Conn) Conn {
-	return conn{connection: c}
+func (c conn) Exists(k interface{}) (bool, error) {
+	rep, err := c.connection.Do("EXISTS", k)
+	if err != nil {
+		return false, err
+	}
+
+	i, err := toInt64(rep)
+	if err != nil {
+		return false, err
+	}
+
+	return i == 1, nil
 }
