@@ -7,8 +7,12 @@ type Conn interface {
 	Del(k interface{}) error
 	Set(k, v interface{}) error
 	Get(k interface{}) ([]byte, error)
+	GetSet(k, v interface{}) ([]byte, error)
 	Expire(k, expiration interface{}) error
 	Exists(k interface{}) (bool, error)
+	Keys(pattern string) ([]string, error)
+	FlushAll() error
+	FlushDb() error
 }
 
 type conn struct {
