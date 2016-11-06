@@ -7,3 +7,7 @@ services:
   - redis-server
 install:
   - go get github.com/garyburd/redigo/redis
+  - go get github.com/pkg4go/convert
+  - go get github.com/pkg4go/assert
+  - go get github.com/pkg4go/slicex
+  - go get github.com/google/uuid
