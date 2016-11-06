@@ -5,3 +5,5 @@ go:
   - 1.7
 services:
   - redis-server
+install:
+  - go get github.com/garyburd/redigo/redis

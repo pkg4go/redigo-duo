@@ -18,6 +18,32 @@ func toByteArray(i interface{}) ([]byte, error) {
 	}
 }
 
+func toByteArrayArray(i interface{}) ([][]byte, error) {
+	if i == nil {
+		return nil, nil
+	}
+
+	var arr []interface{}
+	var res [][]byte
+
+	switch i.(type) {
+	case []interface{}:
+		arr = i.([]interface{})[:]
+	default:
+		return nil, errors.New("invalid type")
+	}
+
+	for _, v := range arr {
+		tmp, err := toByteArray(v)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, tmp)
+	}
+
+	return res, nil
+}
+
 func toString(i interface{}) (string, error) {
 	if i == nil {
 		return "", nil
